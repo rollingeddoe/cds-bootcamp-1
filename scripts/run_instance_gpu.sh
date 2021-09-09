@@ -10,9 +10,9 @@ set -u
 
 echo "Writing instance config file"
 
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR log-1.nyu.cluster << EOF
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR log-1.nyu.cluster -l $USER << EOF
 cat << EOFCONFIG > \$HOME/.ssh/burst_instance_config_gpu
-Host burstinstancecpu
+Host burstinstancegpu
     Hostname ${HOSTNAME}
     ForwardAgent yes
 EOFCONFIG
