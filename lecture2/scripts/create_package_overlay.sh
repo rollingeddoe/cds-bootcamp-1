@@ -1,0 +1,28 @@
+#! /bin/bash
+
+# Set this to the directory containing empty overlay images
+OVERLAY_DIRECTORY=/scratch/work/public/overlay-fs-ext3/
+IMAGE_DIRECTORY=/scratch/wz2247/singularity/images/
+
+ADDITIONAL_PACKAGES_OVERLAY=overlay-1GB-400K.ext3.gz
+
+# We will install our own packages in an additional overlay
+# So that we can easily reinstall packages as needed without
+# having to clone the base environment again.
+echo "Extracting additional package overlay"
+cp $OVERLAY_DIRECTORY/$ADDITIONAL_PACKAGES_OVERLAY .
+gunzip $ADDITIONAL_PACKAGES_OVERLAY
+mv $ADDITIONAL_PACKAGES_OVERLAY overlay-packages.ext3
+
+
+# We now execute the commands to install the packages that we need.
+echo "Installing additional packages"
+singularity exec --no-home -B $HOME/.ssh \
+    --overlay overlay-base.ext3 \
+    $IMAGE_DIRECTORY/pytorch_21.06-py3.sif /bin/bash << 'EOF'
+source ~/.bashrc
+conda activate /ext3/conda/bootcamp
+conda install -y pytest
+conda install -c conda-forge hydra-core omegaconf openssh
+python -m pip install -y pytorch-lightning
+EOF
