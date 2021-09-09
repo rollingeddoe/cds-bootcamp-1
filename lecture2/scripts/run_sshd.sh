@@ -5,7 +5,6 @@
 # It is mainly intended to be run inside a container to enable vscode integration.
 
 
-set -e
 set -u
 
 SSH_KEY_DIR=/ext3/ssh/
@@ -23,6 +22,13 @@ fi
 # This is the port on the GCP instance that will be used by the SSH daemon
 SSHD_PORT=12345
 SSHD_PATH=$(which sshd)
+
+if [[ -z "$SSHD_PATH" ]]; then
+echo "Could not find sshd executable)"
+exit 1
+fi
+
+export -p > ~/environment.sh
 
 # Start new ssh daemon binding to user port. We specify the config file as /dev/null
 # to prevent sshd from reading the default config file (which requires root)

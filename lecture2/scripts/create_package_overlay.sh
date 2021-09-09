@@ -32,6 +32,13 @@ singularity exec --no-home -B $HOME/.ssh \
 source ~/.bashrc
 conda activate /ext3/conda/bootcamp
 conda install -y pytest
-conda install -c conda-forge hydra-core omegaconf openssh
-python -m pip install -y pytorch-lightning
+conda install -c conda-forge -y hydra-core omegaconf openssh
+pip install pytorch-lightning
+
+cat << 'EOFBASHRC' >> ~/.bashrc
+if [[ -f ~/environment.sh ]]; then
+source ~/environment.sh
+fi
+EOFBASHRC
+
 EOF
