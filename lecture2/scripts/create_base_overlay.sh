@@ -1,9 +1,11 @@
 #! /bin/bash
 
+set -e
+
 # Set this to the directory containing empty overlay images
 # Note: on GCP the overlay directory does not exist
 OVERLAY_DIRECTORY=/scratch/work/public/overlay-fs-ext3/
-if [[ ! -f $OVERLAY_DIRECTORY ]]; then
+if [[ ! -d $OVERLAY_DIRECTORY ]]; then
 OVERLAY_DIRECTORY=/scratch/wz2247/singularity/overlays/
 fi
 

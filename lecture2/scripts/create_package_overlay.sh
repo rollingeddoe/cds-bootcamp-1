@@ -1,9 +1,11 @@
 #! /bin/bash
 
+set -e
+
 # Set this to the directory containing empty overlay images
 # Note: on GCP the overlay directory does not exist
 OVERLAY_DIRECTORY=/scratch/work/public/overlay-fs-ext3/
-if [[ ! -f $OVERLAY_DIRECTORY ]]; then
+if [[ ! -d $OVERLAY_DIRECTORY ]]; then
 OVERLAY_DIRECTORY=/scratch/wz2247/singularity/overlays/
 fi
 
@@ -24,7 +26,8 @@ mv $ADDITIONAL_PACKAGES_OVERLAY overlay-packages.ext3
 # We now execute the commands to install the packages that we need.
 echo "Installing additional packages"
 singularity exec --no-home -B $HOME/.ssh \
-    --overlay overlay-base.ext3 \
+    --overlay overlay-packages.ext3 \
+    --overlay overlay-base.ext3:ro \
     $IMAGE_DIRECTORY/pytorch_21.06-py3.sif /bin/bash << 'EOF'
 source ~/.bashrc
 conda activate /ext3/conda/bootcamp

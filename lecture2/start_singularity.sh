@@ -1,8 +1,10 @@
 #! /bin/bash
 
+set -e
+
 # Note: on GCP the overlay directory does not exist
 OVERLAY_DIRECTORY=/scratch/work/public/overlay-fs-ext3/
-if [[ ! -f $OVERLAY_DIRECTORY ]]; then
+if [[ ! -d $OVERLAY_DIRECTORY ]]; then
 OVERLAY_DIRECTORY=/scratch/wz2247/singularity/overlays/
 fi
 
