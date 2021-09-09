@@ -1,17 +1,23 @@
 #! /bin/bash
 
 # Set this to the directory containing empty overlay images
+# Note: on GCP the overlay directory does not exist
 OVERLAY_DIRECTORY=/scratch/work/public/overlay-fs-ext3/
+if [[ ! -f $OVERLAY_DIRECTORY ]]; then
+OVERLAY_DIRECTORY=/scratch/wz2247/singularity/overlays/
+fi
+
 IMAGE_DIRECTORY=/scratch/wz2247/singularity/images/
 
-ADDITIONAL_PACKAGES_OVERLAY=overlay-1GB-400K.ext3.gz
+# Set this to the overlay to use for additional packages.
+ADDITIONAL_PACKAGES_OVERLAY=overlay-1GB-400K.ext3
 
 # We will install our own packages in an additional overlay
 # So that we can easily reinstall packages as needed without
 # having to clone the base environment again.
 echo "Extracting additional package overlay"
-cp $OVERLAY_DIRECTORY/$ADDITIONAL_PACKAGES_OVERLAY .
-gunzip $ADDITIONAL_PACKAGES_OVERLAY
+cp $OVERLAY_DIRECTORY/$ADDITIONAL_PACKAGES_OVERLAY.gz .
+gunzip $ADDITIONAL_PACKAGES_OVERLAY.gz
 mv $ADDITIONAL_PACKAGES_OVERLAY overlay-packages.ext3
 
 

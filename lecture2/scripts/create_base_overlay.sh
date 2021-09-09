@@ -1,12 +1,16 @@
 #! /bin/bash
 
-
 # Set this to the directory containing empty overlay images
+# Note: on GCP the overlay directory does not exist
 OVERLAY_DIRECTORY=/scratch/work/public/overlay-fs-ext3/
+if [[ ! -f $OVERLAY_DIRECTORY ]]; then
+OVERLAY_DIRECTORY=/scratch/wz2247/singularity/overlays/
+fi
+
 IMAGE_DIRECTORY=/scratch/wz2247/singularity/images/
 
 # Set this to the overlay to use for base packages
-BASE_PACKAGES_OVERLAY=overlay-7.5GB-300K.ext3.gz
+BASE_PACKAGES_OVERLAY=overlay-7.5GB-300K.ext3
 
 
 # We first extract a pre-defined overlay file
@@ -14,8 +18,8 @@ BASE_PACKAGES_OVERLAY=overlay-7.5GB-300K.ext3.gz
 # packages that already exist in the container
 # but in a location we can modify
 echo "Extracting base package overlay"
-cp $OVERLAY_DIRECTORY/$BASE_PACKAGES_OVERLAY .
-gunzip $BASE_PACKAGES_OVERLAY
+cp $OVERLAY_DIRECTORY/$BASE_PACKAGES_OVERLAY.gz .
+gunzip $BASE_PACKAGES_OVERLAY.gz
 mv $BASE_PACKAGES_OVERLAY overlay-base.ext3
 
 

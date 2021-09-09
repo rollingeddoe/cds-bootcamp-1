@@ -1,7 +1,27 @@
 #! /bin/bash
 
-DATA_DIRECTORY=/scratch/wz2247/data/
-IMAGE=/scratch/wz2247/singularity/images/
+# Note: on GCP the overlay directory does not exist
+OVERLAY_DIRECTORY=/scratch/work/public/overlay-fs-ext3/
+if [[ ! -f $OVERLAY_DIRECTORY ]]; then
+OVERLAY_DIRECTORY=/scratch/wz2247/singularity/overlays/
+fi
+
+TMP_OVERLAY=overlay-0.5GB-200K.ext3
+
+DATA_DIRECTORY=${DATA_DIRECTORY:-/scratch/wz2247/data/}
+IMAGE=${IMAGE:-/scratch/wz2247/singularity/images/pytorch_21.06-py3.sif}
+
+# First, check that the temp overlay exists. Otherwise grap it from the overlays.
+
+if [[ ! -f overlay-temp.ext3 ]]; then
+
+echo "Temporary overlay not found, automatically creating a new one."
+cp $OVERLAY_DIRECTORY/$TMP_OVERLAY.gz .
+gunzip $TMP_OVERLAY.gz
+mv $TMP_OVERLAY overlay-temp.ext3
+
+fi
+
 
 # This script starts singularity with all the expected binds in place.
 # The following binds / overlays are defined
