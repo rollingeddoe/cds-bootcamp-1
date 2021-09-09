@@ -19,6 +19,7 @@ def main(config: model.PlacesTrainingConfig):
 
     trainer_kwargs['gpus'] = config.gpus
     trainer_kwargs['callbacks'] = callbacks
+    trainer_kwargs['max_epochs'] = config.max_epochs
 
     trainer = pytorch_lightning.Trainer(**trainer_kwargs)
 
