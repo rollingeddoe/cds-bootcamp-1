@@ -15,15 +15,23 @@ def main(config: model.PlacesTrainingConfig):
     trainer_kwargs = { **config.lightning }
 
     if config.optim.grad_clip_norm is not None:
-        trainer_kwargs['grad_clip_norm'] = config.optim.grad_clip_norm
+        trainer_kwargs['gradient_clip_val'] = config.optim.grad_clip_norm
 
     trainer_kwargs['gpus'] = config.gpus
+
+    if config.gpus > 1:
+        trainer_kwargs['accelerator'] = 'ddp'
+
     trainer_kwargs['callbacks'] = callbacks
     trainer_kwargs['max_epochs'] = config.max_epochs
 
     trainer = pytorch_lightning.Trainer(**trainer_kwargs)
 
-    dm = dataset.PlacesDataModule(config.batch_size, config.data.root)
+    dm = dataset.PlacesDataModule(
+        config.batch_size // config.gpus,
+        config.data.root,
+        config.data.num_workers)
+
     dm.setup()
 
     config.data.dataset_size = len(dm.train_ds)
